@@ -57,7 +57,7 @@ export default function AnalysisPage({ params }: { params: { id: string } }) {
   }, [params.id, router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -70,7 +70,7 @@ export default function AnalysisPage({ params }: { params: { id: string } }) {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             className="inline-block"
           >
-            <Loader2 className="w-16 h-16 text-indigo-600" />
+            <Loader2 className="w-16 h-16 text-green-600" />
           </motion.div>
         </div>
 
@@ -86,7 +86,7 @@ export default function AnalysisPage({ params }: { params: { id: string } }) {
           </div>
           <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
+              className="h-full bg-gradient-to-r from-green-500 to-emerald-600"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.5 }}
@@ -107,7 +107,7 @@ export default function AnalysisPage({ params }: { params: { id: string } }) {
               {index < currentStep ? (
                 <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
               ) : index === currentStep ? (
-                <Loader2 className="w-6 h-6 text-indigo-600 animate-spin flex-shrink-0" />
+                <Loader2 className="w-6 h-6 text-green-600 animate-spin flex-shrink-0" />
               ) : (
                 <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex-shrink-0" />
               )}

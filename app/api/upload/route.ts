@@ -37,23 +37,8 @@ export async function POST(req: NextRequest) {
       access: 'public',
     })
 
-    // Trigger Python backend analysis
-    const pythonApiUrl = process.env.PYTHON_API_URL
-    if (pythonApiUrl) {
-      try {
-        await fetch(`${pythonApiUrl}/analyze`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            fileUrl: blob.url,
-            presentationId 
-          })
-        })
-      } catch (error) {
-        console.error('Error triggering analysis:', error)
-        // Continue anyway - we'll use mock data
-      }
-    }
+    // In production, trigger AI analysis here
+    // For now, return presentation ID for demo with mock data
 
     return NextResponse.json({ 
       presentationId,

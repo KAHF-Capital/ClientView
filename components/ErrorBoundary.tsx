@@ -135,7 +135,7 @@ export class ErrorBoundary extends Component<Props, State> {
               
               <Button
                 onClick={this.handleGoHome}
-                className="gap-2 bg-indigo-600 hover:bg-indigo-700"
+                className="gap-2 bg-green-600 hover:bg-green-700"
                 size="lg"
               >
                 <Home className="w-4 h-4" />

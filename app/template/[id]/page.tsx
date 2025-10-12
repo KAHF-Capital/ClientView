@@ -98,7 +98,7 @@ export default function TemplateReviewPage({ params }: { params: { id: string } 
             <Button
               onClick={() => router.push(`/builder/${params.id}`)}
               size="lg"
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-green-600 hover:bg-green-700"
             >
               Continue to Builder
               <ArrowRight className="ml-2 w-4 h-4" />

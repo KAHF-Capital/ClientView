@@ -48,9 +48,9 @@ export default function UploadPage() {
 
   if (uploading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-16 h-16 text-indigo-600 animate-spin mx-auto mb-4" />
+          <Loader2 className="w-16 h-16 text-green-600 animate-spin mx-auto mb-4" />
           <p className="text-xl text-gray-700">Uploading your presentation...</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-12">
         <motion.div 
@@ -87,8 +87,8 @@ export default function UploadPage() {
               border-4 border-dashed rounded-2xl p-16
               transition-all duration-300 cursor-pointer
               ${isDragActive 
-                ? 'border-indigo-500 bg-indigo-50 scale-105' 
-                : 'border-gray-300 bg-white hover:border-indigo-400 hover:shadow-xl'
+                ? 'border-green-500 bg-green-50 scale-105' 
+                : 'border-gray-300 bg-white hover:border-green-400 hover:shadow-xl'
               }
             `}
           >
@@ -100,7 +100,7 @@ export default function UploadPage() {
                 transition={{ repeat: Infinity, duration: 2 }}
                 className="inline-block mb-6"
               >
-                <FileText className="w-20 h-20 text-indigo-500" />
+                <FileText className="w-20 h-20 text-green-600" />
               </motion.div>
               
               <h2 className="text-2xl font-semibold text-gray-800 mb-3">
@@ -111,7 +111,7 @@ export default function UploadPage() {
                 Drag & drop your PowerPoint here or click to browse
               </p>
               
-              <div className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+              <div className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
                 Choose File
               </div>
               
@@ -137,7 +137,7 @@ export default function UploadPage() {
               <Button
                 onClick={() => router.push('/template/demo')}
                 size="lg"
-                className="bg-indigo-600 hover:bg-indigo-700"
+                className="bg-green-600 hover:bg-green-700"
               >
                 <FileText className="w-5 h-5 mr-2" />
                 View Template Library
@@ -146,6 +146,7 @@ export default function UploadPage() {
                 onClick={() => router.push('/builder/demo')}
                 size="lg"
                 variant="outline"
+                className="border-green-600 text-green-600 hover:bg-green-50"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Open Builder
@@ -184,7 +185,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow"
     >
-      <div className="text-indigo-600 mb-4">
+      <div className="text-green-600 mb-4">
         {icon}
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">

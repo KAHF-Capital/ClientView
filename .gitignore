@@ -1,8 +1,5 @@
 # Dependencies
 node_modules/
-python-backend/venv/
-python-backend/__pycache__/
-*.pyc
 
 # Next.js
 .next/
@@ -14,7 +11,6 @@ dist/
 .env
 .env.local
 .env*.local
-python-backend/.env
 
 # Debug
 npm-debug.log*

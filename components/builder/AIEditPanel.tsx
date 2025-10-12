@@ -58,7 +58,7 @@ export default function AIEditPanel({
       {/* Header */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-2 mb-2">
-          <Wand2 className="w-5 h-5 text-indigo-600" />
+          <Wand2 className="w-5 h-5 text-green-600" />
           <h2 className="text-lg font-semibold text-gray-900">
             AI Editor
           </h2>
@@ -98,7 +98,7 @@ export default function AIEditPanel({
                   setInstruction('')
                 }}
                 disabled={!instruction || isGenerating}
-                className="w-full mt-3 bg-indigo-600 hover:bg-indigo-700"
+                className="w-full mt-3 bg-green-600 hover:bg-green-700"
               >
                 {isGenerating ? (
                   <>

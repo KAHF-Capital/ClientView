@@ -60,7 +60,7 @@ export default function SlideLibrary({
             className={`
               p-3 rounded-lg border-2 cursor-pointer transition-all
               ${activeSlide?.id === slide.id
-                ? 'border-indigo-500 bg-indigo-50'
+                ? 'border-green-500 bg-green-50'
                 : 'border-gray-200 hover:border-gray-300 bg-white'
               }
             `}
