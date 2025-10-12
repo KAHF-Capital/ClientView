@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+.next
+out
+build
+dist
+
+# Python
+python-backend/venv
+python-backend/__pycache__
+*.pyc
+
+# Misc
+.cache
+*.log
+package-lock.json
+

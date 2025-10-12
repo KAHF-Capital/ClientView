@@ -1,31 +1,129 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel, validator
 from typing import List, Dict, Any, Optional
 import os
 import re
 from pathlib import Path
+import time
+from collections import defaultdict
+from datetime import datetime, timedelta
 
-app = FastAPI(title="ClientView Python Backend")
-
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Configure for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title="ClientView Python Backend",
+    docs_url="/docs" if os.getenv("ENVIRONMENT") == "development" else None,
+    redoc_url="/redoc" if os.getenv("ENVIRONMENT") == "development" else None
 )
 
-# Models
+# Security: Configure CORS properly
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"],
+    max_age=3600,
+)
+
+# Security: Trusted host middleware (prevents host header attacks)
+if os.getenv("ENVIRONMENT") == "production":
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=["*.vercel.app", "*.railway.app"]
+    )
+
+# Rate limiting (simple in-memory implementation)
+rate_limit_storage: Dict[str, List[float]] = defaultdict(list)
+RATE_LIMIT_REQUESTS = 100  # requests
+RATE_LIMIT_WINDOW = 60  # seconds
+
+def check_rate_limit(identifier: str) -> bool:
+    """Simple rate limiter"""
+    now = time.time()
+    window_start = now - RATE_LIMIT_WINDOW
+    
+    # Clean old entries
+    rate_limit_storage[identifier] = [
+        timestamp for timestamp in rate_limit_storage[identifier]
+        if timestamp > window_start
+    ]
+    
+    # Check limit
+    if len(rate_limit_storage[identifier]) >= RATE_LIMIT_REQUESTS:
+        return False
+    
+    rate_limit_storage[identifier].append(now)
+    return True
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    """Rate limiting middleware"""
+    # Skip rate limiting for health checks
+    if request.url.path in ["/", "/health"]:
+        return await call_next(request)
+    
+    # Get client identifier
+    client_ip = request.client.host if request.client else "unknown"
+    
+    if not check_rate_limit(client_ip):
+        return JSONResponse(
+            status_code=429,
+            content={"error": "Too many requests. Please try again later."}
+        )
+    
+    return await call_next(request)
+
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    """Add security headers to all responses"""
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
+# Models with validation
 class AnalyzeRequest(BaseModel):
     fileUrl: str
     presentationId: str
+    
+    @validator('fileUrl')
+    def validate_url(cls, v):
+        if not v.startswith(('http://', 'https://')):
+            raise ValueError('fileUrl must be a valid HTTP/HTTPS URL')
+        if len(v) > 2048:
+            raise ValueError('fileUrl is too long')
+        return v
+    
+    @validator('presentationId')
+    def validate_presentation_id(cls, v):
+        if not re.match(r'^[a-zA-Z0-9_-]+$', v):
+            raise ValueError('presentationId contains invalid characters')
+        if len(v) > 100:
+            raise ValueError('presentationId is too long')
+        return v
 
 class GenerateRequest(BaseModel):
     templateId: str
     slides: List[Dict[str, Any]]
+    
+    @validator('templateId')
+    def validate_template_id(cls, v):
+        if not re.match(r'^[a-zA-Z0-9_-]+$', v):
+            raise ValueError('templateId contains invalid characters')
+        if len(v) > 100:
+            raise ValueError('templateId is too long')
+        return v
+    
+    @validator('slides')
+    def validate_slides(cls, v):
+        if len(v) > 100:
+            raise ValueError('Too many slides (max 100)')
+        return v
 
 # Constants
 SLIDE_CATEGORIES = [
