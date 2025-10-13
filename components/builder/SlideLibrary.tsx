@@ -8,8 +8,11 @@ interface Slide {
   index: number
   title: string
   category: string
+  textContent: string
   thumbnailUrl: string
   variables: Record<string, string>
+  hasCharts: boolean
+  charts: any[]
 }
 
 interface SlideLibraryProps {

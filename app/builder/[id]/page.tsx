@@ -150,7 +150,7 @@ export default function BuilderPage({ params }: { params: { id: string } }) {
           </Button>
           <Button
             onClick={handleDownload}
-            className="bg-indigo-600 hover:bg-indigo-700"
+            className="bg-green-600 hover:bg-green-700"
           >
             <Download className="w-4 h-4 mr-2" />
             Download Presentation

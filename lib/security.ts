@@ -172,7 +172,7 @@ export function containsSQLInjection(input: string): boolean {
     /(\bupdate\b.*\bset\b)/i,
     /(\bdelete\b.*\bfrom\b)/i,
     /(\bdrop\b.*\btable\b)/i,
-    /(\bexec\b.*\(/i,
+    /(\bexec\b.*\()/i,
     /(;.*--)/,
     /('.*or.*'.*=.*')/i,
   ]
