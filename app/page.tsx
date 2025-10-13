@@ -37,7 +37,22 @@ export default function UploadPage() {
     setParsing(true)
     
     try {
-      // Parse PowerPoint file
+      // Upload to server first
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed')
+      }
+      
+      const { presentationId } = await uploadResponse.json()
+      
+      // Parse PowerPoint file client-side for preview
       const presentation = await parsePowerPoint(file)
       setParsed(presentation)
       setParsing(false)
@@ -48,6 +63,11 @@ export default function UploadPage() {
         initialReplacements[v.name] = v.value
       })
       setReplacements(initialReplacements)
+      
+      // After 1 second, route to full editor
+      setTimeout(() => {
+        router.push(`/builder/${presentationId}`)
+      }, 1000)
       
     } catch (error) {
       console.error('Upload error:', error)
@@ -136,11 +156,14 @@ export default function UploadPage() {
                   className="bg-white rounded-lg border-2 border-gray-200 p-4 hover:border-green-500 transition-colors"
                 >
                   <div className="flex items-start gap-4">
-                    {/* Slide Number */}
-                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                      <span className="text-lg font-bold text-green-700">
-                        {slide.index + 1}
-                      </span>
+                    {/* Slide Thumbnail */}
+                    <div className="flex-shrink-0 w-32 h-24 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                      <div className="text-center">
+                        <FileText className="w-8 h-8 text-gray-400 mx-auto mb-1" />
+                        <span className="text-sm font-bold text-gray-600">
+                          Slide {slide.index + 1}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Slide Content */}
@@ -149,15 +172,15 @@ export default function UploadPage() {
                         <h3 className="font-semibold text-gray-900 truncate">
                           {slide.title}
                         </h3>
-                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                        <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">
                           {slide.category}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-3">
-                        {slide.textContent}
+                      <p className="text-sm text-gray-600 line-clamp-2">
+                        {slide.textContent.substring(0, 150)}...
                       </p>
                       <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-                        <span>{Object.keys(slide.variables).length} variables</span>
+                        <span>📝 {Object.keys(slide.variables).length} variables</span>
                         {slide.hasCharts && (
                           <span className="flex items-center gap-1">
                             📊 Contains charts

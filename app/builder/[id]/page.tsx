@@ -176,6 +176,15 @@ export default function BuilderPage({ params }: { params: { id: string } }) {
           <SlideCanvas
             slide={activeSlide}
             isGenerating={isGenerating}
+            onUpdate={(updates) => {
+              if (activeSlide) {
+                const updatedSlide = { ...activeSlide, ...updates }
+                setActiveSlide(updatedSlide)
+                setSelectedSlides(slides =>
+                  slides.map(s => s.id === activeSlide.id ? updatedSlide : s)
+                )
+              }
+            }}
           />
         </div>
 
