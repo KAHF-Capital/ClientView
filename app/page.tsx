@@ -3,12 +3,20 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDropzone } from 'react-dropzone'
-import { FileText, Sparkles, Upload, Loader2 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { FileText, Sparkles, Upload, Loader2, CheckCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+import VariableEditor from '@/components/VariableEditor'
+import { parsePowerPoint, type ParsedPresentation, type DetectedVariable } from '@/lib/pptx-parser'
+import { exportPresentation } from '@/lib/pptx-exporter'
 
 export default function UploadPage() {
   const [uploading, setUploading] = useState(false)
+  const [parsing, setParsing] = useState(false)
+  const [parsed, setParsed] = useState<ParsedPresentation | null>(null)
+  const [fileName, setFileName] = useState('')
+  const [replacements, setReplacements] = useState<Record<string, string>>({})
+  const [exporting, setExporting] = useState(false)
   const router = useRouter()
   
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -23,35 +31,155 @@ export default function UploadPage() {
   async function handleUpload(files: File[]) {
     if (files.length === 0) return
     
+    const file = files[0]
+    setFileName(file.name)
     setUploading(true)
+    setParsing(true)
+    
     try {
-      const formData = new FormData()
-      formData.append('file', files[0])
+      // Parse PowerPoint file
+      const presentation = await parsePowerPoint(file)
+      setParsed(presentation)
+      setParsing(false)
       
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
+      // Initialize replacements with original values
+      const initialReplacements: Record<string, string> = {}
+      presentation.detectedVariables.forEach(v => {
+        initialReplacements[v.name] = v.value
       })
+      setReplacements(initialReplacements)
       
-      if (!response.ok) {
-        throw new Error('Upload failed')
-      }
-      
-      const { presentationId } = await response.json()
-      router.push(`/analyze/${presentationId}`)
     } catch (error) {
       console.error('Upload error:', error)
-      alert('Upload failed. Please try again.')
+      alert('Failed to parse PowerPoint file. Please try again.')
       setUploading(false)
+      setParsing(false)
     }
   }
 
-  if (uploading) {
+  async function handleExport() {
+    if (!parsed) return
+    
+    setExporting(true)
+    try {
+      await exportPresentation(parsed.slides, replacements, fileName.replace('.pptx', '_edited.pptx'))
+      alert('Presentation exported successfully!')
+    } catch (error) {
+      console.error('Export error:', error)
+      alert('Failed to export presentation. Please try again.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  function handleReset() {
+    setUploading(false)
+    setParsing(false)
+    setParsed(null)
+    setFileName('')
+    setReplacements({})
+  }
+
+  if (parsing) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
-        <div className="text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center bg-white rounded-2xl shadow-2xl p-12 max-w-md"
+        >
           <Loader2 className="w-16 h-16 text-green-600 animate-spin mx-auto mb-4" />
-          <p className="text-xl text-gray-700">Uploading your presentation...</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Parsing Presentation
+          </h2>
+          <p className="text-gray-600">
+            Extracting slides and detecting variables...
+          </p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  if (uploading && parsed) {
+    return (
+      <div className="h-screen flex flex-col bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-gray-900">ClientView Editor</h1>
+            <p className="text-sm text-gray-600 mt-1">{fileName}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-sm text-green-600">
+              <CheckCircle className="w-4 h-4" />
+              {parsed.slides.length} slides parsed
+            </div>
+            <Button variant="outline" onClick={handleReset}>
+              Upload New File
+            </Button>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Left: Slide Preview */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Slides Preview
+            </h2>
+            <div className="grid gap-4">
+              {parsed.slides.map((slide) => (
+                <motion.div
+                  key={slide.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white rounded-lg border-2 border-gray-200 p-4 hover:border-green-500 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Slide Number */}
+                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                      <span className="text-lg font-bold text-green-700">
+                        {slide.index + 1}
+                      </span>
+                    </div>
+
+                    {/* Slide Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {slide.title}
+                        </h3>
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                          {slide.category}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-3">
+                        {slide.textContent}
+                      </p>
+                      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                        <span>{Object.keys(slide.variables).length} variables</span>
+                        {slide.hasCharts && (
+                          <span className="flex items-center gap-1">
+                            📊 Contains charts
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Variable Editor */}
+          <div className="w-96 border-l overflow-y-auto">
+            <VariableEditor
+              variables={parsed.detectedVariables}
+              onReplacementsChange={setReplacements}
+              onExport={handleExport}
+              isExporting={exporting}
+            />
+          </div>
         </div>
       </div>
     )
@@ -197,4 +325,3 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
     </motion.div>
   )
 }
-
