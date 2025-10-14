@@ -144,88 +144,79 @@ export default function UploadPage() {
 
   if (uploading && parsed) {
     return (
-      <div className="h-screen flex flex-col bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">ClientView Editor</h1>
-            <p className="text-sm text-gray-600 mt-1">{fileName}</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-green-600">
-              <CheckCircle className="w-4 h-4" />
-              {parsed.slides.length} slides parsed
-            </div>
-            <Button variant="outline" onClick={handleReset}>
-              Upload New File
-            </Button>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Left: Slide Preview */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Slides Preview
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full"
+        >
+          <div className="text-center mb-6">
+            <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Presentation Parsed Successfully!
             </h2>
-            <div className="grid gap-4">
-              {parsed.slides.map((slide) => (
-                <motion.div
-                  key={slide.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-lg border-2 border-gray-200 p-4 hover:border-green-500 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    {/* Slide Thumbnail */}
-                    <div className="flex-shrink-0 w-32 h-24 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
-                      <div className="text-center">
-                        <FileText className="w-8 h-8 text-gray-400 mx-auto mb-1" />
-                        <span className="text-sm font-bold text-gray-600">
-                          Slide {slide.index + 1}
-                        </span>
-                      </div>
-                    </div>
+            <p className="text-gray-600">
+              {fileName}
+            </p>
+          </div>
 
-                    {/* Slide Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-gray-900 truncate">
-                          {slide.title}
-                        </h3>
-                        <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">
-                          {slide.category}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {slide.textContent.substring(0, 150)}...
-                      </p>
-                      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-                        <span>📝 {Object.keys(slide.variables).length} variables</span>
-                        {slide.hasCharts && (
-                          <span className="flex items-center gap-1">
-                            📊 Contains charts
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="bg-green-50 rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-green-700">
+                {parsed.slides.length}
+              </div>
+              <div className="text-sm text-green-600">Slides</div>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-green-700">
+                {parsed.detectedVariables.length}
+              </div>
+              <div className="text-sm text-green-600">Variables</div>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-green-700">
+                {new Set(parsed.slides.map(s => s.category)).size}
+              </div>
+              <div className="text-sm text-green-600">Categories</div>
             </div>
           </div>
 
-          {/* Right: Variable Editor */}
-          <div className="w-96 border-l overflow-y-auto">
-            <VariableEditor
-              variables={parsed.detectedVariables}
-              onReplacementsChange={setReplacements}
-              onExport={handleExport}
-              isExporting={exporting}
-            />
+          <div className="bg-gray-50 rounded-lg p-4 mb-6 max-h-64 overflow-y-auto">
+            <h3 className="font-semibold text-gray-900 mb-3">Detected Slides:</h3>
+            <div className="space-y-2">
+              {parsed.slides.slice(0, 5).map((slide, index) => (
+                <div key={index} className="flex items-start gap-2 text-sm">
+                  <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold">
+                    {index + 1}
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900">{slide.title || 'Untitled'}</p>
+                    <p className="text-xs text-gray-500">{slide.category}</p>
+                  </div>
+                </div>
+              ))}
+              {parsed.slides.length > 5 && (
+                <p className="text-xs text-gray-500 text-center pt-2">
+                  +{parsed.slides.length - 5} more slides
+                </p>
+              )}
+            </div>
           </div>
-        </div>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-600 mb-4">
+              Opening editor...
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <motion.div
+                className="bg-green-600 h-2 rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 1.5 }}
+              />
+            </div>
+          </div>
+        </motion.div>
       </div>
     )
   }
