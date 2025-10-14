@@ -52,8 +52,30 @@ export default function UploadPage() {
       
       const { presentationId } = await uploadResponse.json()
       
-      // Parse PowerPoint file client-side for preview
+      // Parse PowerPoint file client-side
       const presentation = await parsePowerPoint(file)
+      
+      // Save parsed template to server
+      const saveResponse = await fetch('/api/save-template', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          presentationId,
+          template: {
+            name: file.name,
+            slides: presentation.slides,
+            theme: presentation.theme,
+            slideCount: presentation.slides.length,
+            variableCount: presentation.detectedVariables.length,
+            categoryCount: new Set(presentation.slides.map(s => s.category)).size
+          }
+        })
+      })
+      
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save template')
+      }
+      
       setParsed(presentation)
       setParsing(false)
       
@@ -64,10 +86,10 @@ export default function UploadPage() {
       })
       setReplacements(initialReplacements)
       
-      // After 1 second, route to full editor
+      // Route to full editor after brief preview
       setTimeout(() => {
         router.push(`/builder/${presentationId}`)
-      }, 1000)
+      }, 1500)
       
     } catch (error) {
       console.error('Upload error:', error)

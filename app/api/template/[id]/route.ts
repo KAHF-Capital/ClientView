@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getTemplate } from '@/lib/template-store'
 
-// Mock data for demo (replace with actual database in production)
+// Mock data for demo (fallback if no uploaded template found)
 const mockTemplate = {
   name: 'Client Proposal Template',
   slideCount: 8,
@@ -132,9 +133,23 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    // In production, fetch from database using params.id
-    // For demo, return mock data
+    // Try to get uploaded template from store first
+    const uploadedTemplate = getTemplate(params.id)
     
+    if (uploadedTemplate) {
+      // Return the uploaded template with its slides
+      return NextResponse.json({
+        name: uploadedTemplate.name,
+        slideCount: uploadedTemplate.slideCount,
+        variableCount: uploadedTemplate.variableCount,
+        categoryCount: uploadedTemplate.categoryCount,
+        theme: uploadedTemplate.theme,
+        slides: uploadedTemplate.slides
+      })
+    }
+    
+    // Fall back to mock data for demo mode
+    console.log('Using mock template for:', params.id)
     return NextResponse.json(mockTemplate)
   } catch (error) {
     console.error('Template fetch error:', error)
