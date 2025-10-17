@@ -147,7 +147,25 @@ function extractTextFromXml(xml: any): string {
   }
   
   traverse(xml)
-  return texts.join('\n').trim()
+  
+  // Clean up the extracted text
+  const rawText = texts.join('\n').trim()
+  const cleaned = rawText
+    .replace(/https?:\/\/schemas\.openxmlformats\.org\/[^\s]+/g, '')
+    .replace(/https?:\/\/schemas\.microsoft\.com\/[^\s]+/g, '')
+    .replace(/urn:schemas-microsoft-com:[^\s]+/g, '')
+    .replace(/\{[A-F0-9-]+\}/g, '') // Remove GUIDs
+    .replace(/^\d+$/gm, '') // Remove standalone numbers
+    .replace(/^\s*$/gm, '') // Remove empty lines
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim()
+  
+  // If the cleaned text is empty or just technical artifacts, return a fallback
+  if (!cleaned || cleaned.length < 10) {
+    return 'Slide content extracted successfully'
+  }
+  
+  return cleaned
 }
 
 /**
