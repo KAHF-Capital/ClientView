@@ -92,3 +92,6 @@ If you want to add full functionality:
 - Green color scheme applied consistently across all pages
 - Simplified user interface with clean, modern design
 
+
+
+
