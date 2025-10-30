@@ -1,0 +1,168 @@
+{
+  "id": "portfolio-rebalancing",
+  "name": "Portfolio Rebalancing",
+  "category": "rebalancing",
+  "description": "Rebalancing recommendation and implementation plan",
+  "thumbnail": "/templates/rebalancing.jpg",
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "Rebalancing Overview",
+      "category": "overview",
+      "order": 1,
+      "components": [
+        {
+          "type": "text",
+          "position": { "x": 0, "y": 0, "w": 12, "h": 2 },
+          "content": "Portfolio rebalancing recommendation to restore target allocation and optimize risk-adjusted returns.",
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.6
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 0, "y": 3, "w": 4, "h": 2 },
+          "label": "Drift from Target",
+          "value": "{{drift_amount}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold",
+            "color": "#dc2626"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 4, "y": 3, "w": 4, "h": 2 },
+          "label": "Current Value",
+          "value": "{{current_value}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 8, "y": 3, "w": 4, "h": 2 },
+          "label": "Last Rebalanced",
+          "value": "{{last_rebalanced}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-2",
+      "title": "Current vs Target Allocation",
+      "category": "comparison",
+      "order": 2,
+      "components": [
+        {
+          "type": "chart",
+          "position": { "x": 0, "y": 1, "w": 5.5, "h": 5 },
+          "chartType": "pie",
+          "data": "{{current_allocation}}",
+          "config": {
+            "title": "Current"
+          }
+        },
+        {
+          "type": "chart",
+          "position": { "x": 6.5, "y": 1, "w": 5.5, "h": 5 },
+          "chartType": "pie",
+          "data": "{{target_allocation}}",
+          "config": {
+            "title": "Target"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-3",
+      "title": "Rebalancing Transactions",
+      "category": "transactions",
+      "order": 3,
+      "components": [
+        {
+          "type": "table",
+          "position": { "x": 0, "y": 1, "w": 12, "h": 5 },
+          "data": "{{transactions}}",
+          "config": {
+            "headers": ["Asset", "Current", "Target", "Adjustment", "Transaction"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-4",
+      "title": "Implementation Strategy",
+      "category": "strategy",
+      "order": 4,
+      "components": [
+        {
+          "type": "text",
+          "position": { "x": 0, "y": 0, "w": 12, "h": 6 },
+          "content": "{{implementation_strategy}}",
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-5",
+      "title": "Expected Impact",
+      "category": "impact",
+      "order": 5,
+      "components": [
+        {
+          "type": "metric",
+          "position": { "x": 0, "y": 1, "w": 3, "h": 2 },
+          "label": "Risk Reduction",
+          "value": "{{risk_reduction}}",
+          "style": {
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#16a34a"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 3, "y": 1, "w": 3, "h": 2 },
+          "label": "Sharpe Improvement",
+          "value": "{{sharpe_improvement}}",
+          "style": {
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#16a34a"
+          }
+        },
+        {
+          "type": "text",
+          "position": { "x": 6, "y": 1, "w": 6, "h": 5 },
+          "content": "{{expected_impact}}",
+          "style": {
+            "fontSize": 16,
+            "lineHeight": 1.6
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    "drift_amount",
+    "current_value",
+    "last_rebalanced",
+    "current_allocation",
+    "target_allocation",
+    "transactions",
+    "implementation_strategy",
+    "risk_reduction",
+    "sharpe_improvement",
+    "expected_impact"
+  ]
+}
+

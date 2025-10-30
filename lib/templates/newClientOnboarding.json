@@ -1,0 +1,184 @@
+{
+  "id": "new-client-onboarding",
+  "name": "New Client Onboarding",
+  "category": "onboarding",
+  "description": "Welcome new clients with comprehensive investment proposal",
+  "thumbnail": "/templates/new-client.jpg",
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "Welcome {{client_name}}",
+      "category": "intro",
+      "order": 1,
+      "components": [
+        {
+          "type": "text",
+          "position": { "x": 0, "y": 0, "w": 12, "h": 2 },
+          "content": "Thank you for choosing our wealth management services. This proposal outlines our recommended investment strategy tailored to your financial goals.",
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.6
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 0, "y": 3, "w": 4, "h": 2 },
+          "label": "Investment Horizon",
+          "value": "{{investment_horizon}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 4, "y": 3, "w": 4, "h": 2 },
+          "label": "Risk Profile",
+          "value": "{{risk_profile}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 8, "y": 3, "w": 4, "h": 2 },
+          "label": "Initial Investment",
+          "value": "{{initial_investment}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold",
+            "color": "#16a34a"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-2",
+      "title": "Recommended Asset Allocation",
+      "category": "allocation",
+      "order": 2,
+      "components": [
+        {
+          "type": "chart",
+          "position": { "x": 0, "y": 1, "w": 6, "h": 5 },
+          "chartType": "donut",
+          "data": "{{recommended_allocation}}",
+          "config": {
+            "showLabels": true,
+            "colors": ["#16a34a", "#22c55e", "#4ade80", "#86efac"]
+          }
+        },
+        {
+          "type": "table",
+          "position": { "x": 7, "y": 1, "w": 5, "h": 5 },
+          "data": "{{allocation_table}}",
+          "config": {
+            "headers": ["Asset Class", "Allocation", "Rationale"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-3",
+      "title": "Investment Strategy",
+      "category": "strategy",
+      "order": 3,
+      "components": [
+        {
+          "type": "text",
+          "position": { "x": 0, "y": 0, "w": 12, "h": 6 },
+          "content": "{{investment_strategy}}",
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-4",
+      "title": "Expected Performance",
+      "category": "projection",
+      "order": 4,
+      "components": [
+        {
+          "type": "table",
+          "position": { "x": 0, "y": 1, "w": 12, "h": 5 },
+          "data": "{{performance_projections}}",
+          "config": {
+            "headers": ["Timeframe", "Expected Return", "Volatility", "Probability Range"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-5",
+      "title": "Fees & Expenses",
+      "category": "fees",
+      "order": 5,
+      "components": [
+        {
+          "type": "metric",
+          "position": { "x": 0, "y": 1, "w": 4, "h": 2 },
+          "label": "Annual Management Fee",
+          "value": "{{annual_fee}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "metric",
+          "position": { "x": 4, "y": 1, "w": 4, "h": 2 },
+          "label": "Initial Investment",
+          "value": "{{initial_investment}}",
+          "style": {
+            "fontSize": 20,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "text",
+          "position": { "x": 8, "y": 1, "w": 4, "h": 5 },
+          "content": "{{fee_explanation}}",
+          "style": {
+            "fontSize": 14,
+            "lineHeight": 1.6
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-6",
+      "title": "Risk Disclosures",
+      "category": "disclosure",
+      "order": 6,
+      "components": [
+        {
+          "type": "text",
+          "position": { "x": 0, "y": 0, "w": 12, "h": 6 },
+          "content": "{{risk_disclosures}}",
+          "style": {
+            "fontSize": 14,
+            "lineHeight": 1.6
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    "client_name",
+    "investment_horizon",
+    "risk_profile",
+    "initial_investment",
+    "recommended_allocation",
+    "allocation_table",
+    "investment_strategy",
+    "performance_projections",
+    "annual_fee",
+    "fee_explanation",
+    "risk_disclosures"
+  ]
+}
+
