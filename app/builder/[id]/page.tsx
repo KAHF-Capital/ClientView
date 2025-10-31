@@ -17,6 +17,7 @@ interface Slide {
   variables: Record<string, string>
   hasCharts: boolean
   charts: any[]
+  components?: any[]
 }
 
 interface Template {

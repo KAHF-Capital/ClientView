@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Edit2, Type, BarChart3 } from 'lucide-react'
+import { Loader2, Edit2, Type, BarChart3, TrendingUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import ChartEditor from '@/components/ChartEditor'
+import { PortfolioAllocation, PerformanceChart, RiskMatrix, BarComparison } from '@/components/Charts'
 
 interface Slide {
   id: string
@@ -14,6 +15,8 @@ interface Slide {
   category: string
   thumbnailUrl: string
   hasCharts?: boolean
+  charts?: any[]
+  components?: any[]
 }
 
 interface SlideCanvasProps {
@@ -61,6 +64,56 @@ export default function SlideCanvas({ slide, isGenerating, onUpdate }: SlideCanv
       onUpdate({ textContent: editedContent })
     }
     setEditMode(null)
+  }
+
+  // Render chart based on type
+  const renderChart = (chart: any) => {
+    if (!chart || !chart.data) return null
+
+    const { type, data, config } = chart
+    
+    // Handle string data (variable placeholders)
+    if (typeof data === 'string') {
+      return <div className="text-gray-400 italic">Chart: {data}</div>
+    }
+
+    // Sample data if needed
+    const sampleData = Array.isArray(data) && data.length > 0 ? data : [
+      { name: 'Sample 1', value: 40 },
+      { name: 'Sample 2', value: 30 },
+      { name: 'Sample 3', value: 30 }
+    ]
+
+    switch (type) {
+      case 'pie':
+      case 'donut':
+        return <PortfolioAllocation data={sampleData} type={type as 'pie' | 'donut'} height={300} />
+      case 'line':
+        return <PerformanceChart data={sampleData} height={300} />
+      case 'scatter':
+        return <RiskMatrix data={sampleData} height={300} />
+      case 'bar':
+        return <BarComparison data={sampleData} height={300} />
+      default:
+        return <div className="text-gray-400 italic">Chart type: {type}</div>
+    }
+  }
+
+  // Render metric component
+  const renderMetric = (component: any) => {
+    const { label, value, style } = component
+    
+    // Handle variable placeholders
+    const displayValue = typeof value === 'string' && value.startsWith('{{') 
+      ? value.replace('{{', '').replace('}}', '')
+      : value || '$0.00'
+
+    return (
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+        <div className="text-sm font-medium text-gray-600 mb-1">{label || 'Metric'}</div>
+        <div className="text-2xl font-bold text-green-600">{displayValue}</div>
+      </div>
+    )
   }
 
   return (
@@ -144,7 +197,7 @@ export default function SlideCanvas({ slide, isGenerating, onUpdate }: SlideCanv
             </h1>
           )}
 
-          {/* Content */}
+          {/* Content / Graphics */}
           {editMode === 'content' ? (
             <div>
               <Textarea
@@ -171,11 +224,35 @@ export default function SlideCanvas({ slide, isGenerating, onUpdate }: SlideCanv
               }}
             />
           ) : (
-            <div 
-              className="text-lg text-gray-700 whitespace-pre-wrap cursor-pointer hover:bg-green-50 p-2 -ml-2 rounded transition-colors"
-              onClick={handleContentEdit}
-            >
-              {slide.textContent}
+            <div className="space-y-6">
+              {/* Check if slide has components (graphics) */}
+              {slide.components && slide.components.length > 0 ? (
+                // Render structured components
+                <div className="grid grid-cols-1 gap-6">
+                  {slide.components.map((component: any, idx: number) => (
+                    <div key={idx} className="border-2 border-dashed border-green-300 rounded-lg p-6">
+                      {component.type === 'chart' && renderChart(component)}
+                      {component.type === 'metric' && renderMetric(component)}
+                      {component.type === 'text' && (
+                        <div 
+                          className="text-lg text-gray-700 whitespace-pre-wrap cursor-pointer hover:bg-green-50 p-2 -ml-2 rounded transition-colors"
+                          onClick={handleContentEdit}
+                        >
+                          {component.content || slide.textContent}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Fallback to plain text
+                <div 
+                  className="text-lg text-gray-700 whitespace-pre-wrap cursor-pointer hover:bg-green-50 p-2 -ml-2 rounded transition-colors"
+                  onClick={handleContentEdit}
+                >
+                  {slide.textContent}
+                </div>
+              )}
             </div>
           )}
 

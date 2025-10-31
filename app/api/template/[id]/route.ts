@@ -19,7 +19,7 @@ const mockTemplate = {
       index: 0,
       title: 'Current Portfolio Allocation',
       category: 'Current Allocation',
-      textContent: 'Your current portfolio is allocated across multiple asset classes with a focus on growth equity.\n\nTotal Portfolio Value: {{portfolio_value}}\nEquity Allocation: {{equity_percentage}}%\nFixed Income: {{fixed_income_percentage}}%',
+      textContent: 'Your current portfolio is allocated across multiple asset classes with a focus on growth equity.',
       thumbnailUrl: '',
       variables: {
         portfolio_value: '$2,500,000',
@@ -27,14 +27,33 @@ const mockTemplate = {
         fixed_income_percentage: '30'
       },
       hasCharts: true,
-      charts: []
+      charts: [{
+        type: 'pie',
+        data: [
+          { name: 'Equities', value: 65, color: '#16a34a' },
+          { name: 'Bonds', value: 30, color: '#22c55e' },
+          { name: 'Alternatives', value: 5, color: '#4ade80' }
+        ]
+      }],
+      components: [
+        {
+          type: 'chart',
+          position: { x: 0, y: 0, w: 12, h: 5 },
+          data: [
+            { name: 'Equities', value: 65, color: '#16a34a' },
+            { name: 'Bonds', value: 30, color: '#22c55e' },
+            { name: 'Alternatives', value: 5, color: '#4ade80' }
+          ],
+          config: { showLabels: true }
+        }
+      ]
     },
     {
       id: 'slide-2',
       index: 1,
       title: 'Target Allocation Strategy',
       category: 'Target Allocation',
-      textContent: 'We recommend adjusting your allocation to better align with your long-term goals and risk tolerance.\n\nTarget Equity: {{target_equity}}%\nTarget Fixed Income: {{target_fixed_income}}%\nTarget Alternative: {{target_alternative}}%',
+      textContent: 'We recommend adjusting your allocation to better align with your long-term goals and risk tolerance.',
       thumbnailUrl: '',
       variables: {
         target_equity: '55',
@@ -42,14 +61,33 @@ const mockTemplate = {
         target_alternative: '10'
       },
       hasCharts: true,
-      charts: []
+      charts: [{
+        type: 'donut',
+        data: [
+          { name: 'Equities', value: 55, color: '#16a34a' },
+          { name: 'Bonds', value: 35, color: '#22c55e' },
+          { name: 'Alternatives', value: 10, color: '#4ade80' }
+        ]
+      }],
+      components: [
+        {
+          type: 'chart',
+          position: { x: 0, y: 0, w: 12, h: 5 },
+          data: [
+            { name: 'Equities', value: 55, color: '#16a34a' },
+            { name: 'Bonds', value: 35, color: '#22c55e' },
+            { name: 'Alternatives', value: 10, color: '#4ade80' }
+          ],
+          config: { showLabels: true, type: 'donut' }
+        }
+      ]
     },
     {
       id: 'slide-3',
       index: 2,
       title: 'Historical Performance',
       category: 'Performance',
-      textContent: 'Your portfolio has performed well over the past {{years}} years.\n\n1-Year Return: {{return_1y}}%\n3-Year Return: {{return_3y}}%\n5-Year Return: {{return_5y}}%',
+      textContent: 'Your portfolio has performed well over the past 5 years.',
       thumbnailUrl: '',
       variables: {
         years: '5',
@@ -58,14 +96,37 @@ const mockTemplate = {
         return_5y: '11.2'
       },
       hasCharts: true,
-      charts: []
+      charts: [{
+        type: 'line',
+        data: [
+          { date: '2020', portfolio: 2.5, benchmark: 2.0 },
+          { date: '2021', portfolio: 8.2, benchmark: 5.5 },
+          { date: '2022', portfolio: 5.1, benchmark: 3.2 },
+          { date: '2023', portfolio: 12.8, benchmark: 10.5 },
+          { date: '2024', portfolio: 15.5, benchmark: 12.2 }
+        ]
+      }],
+      components: [
+        {
+          type: 'chart',
+          position: { x: 0, y: 0, w: 12, h: 5 },
+          data: [
+            { date: '2020', portfolio: 2.5, benchmark: 2.0 },
+            { date: '2021', portfolio: 8.2, benchmark: 5.5 },
+            { date: '2022', portfolio: 5.1, benchmark: 3.2 },
+            { date: '2023', portfolio: 12.8, benchmark: 10.5 },
+            { date: '2024', portfolio: 15.5, benchmark: 12.2 }
+          ],
+          config: { type: 'line' }
+        }
+      ]
     },
     {
       id: 'slide-4',
       index: 3,
       title: 'Risk Analysis',
       category: 'Risk/Reward',
-      textContent: 'Understanding the risk-reward profile of your portfolio is crucial for long-term success.\n\nPortfolio Volatility: {{volatility}}%\nSharpe Ratio: {{sharpe_ratio}}\nMax Drawdown: {{max_drawdown}}%',
+      textContent: 'Understanding the risk-reward profile of your portfolio is crucial for long-term success.',
       thumbnailUrl: '',
       variables: {
         volatility: '14.2',
@@ -73,7 +134,41 @@ const mockTemplate = {
         max_drawdown: '-18.5'
       },
       hasCharts: false,
-      charts: []
+      charts: [],
+      components: [
+        {
+          type: 'metric',
+          position: { x: 0, y: 0, w: 4, h: 2 },
+          label: 'Sharpe Ratio',
+          value: '1.25',
+          style: { fontSize: 24 }
+        },
+        {
+          type: 'metric',
+          position: { x: 4, y: 0, w: 4, h: 2 },
+          label: 'Volatility',
+          value: '14.2%',
+          style: { fontSize: 24 }
+        },
+        {
+          type: 'metric',
+          position: { x: 8, y: 0, w: 4, h: 2 },
+          label: 'Max Drawdown',
+          value: '-18.5%',
+          style: { fontSize: 24 }
+        },
+        {
+          type: 'chart',
+          position: { x: 0, y: 3, w: 12, h: 3 },
+          data: [
+            { name: 'High Risk', risk: 20, return: 15 },
+            { name: 'Medium Risk', risk: 12, return: 8 },
+            { name: 'Low Risk', risk: 5, return: 3 },
+            { name: 'Current', risk: 14, return: 11 }
+          ],
+          config: { type: 'scatter' }
+        }
+      ]
     },
     {
       id: 'slide-5',
