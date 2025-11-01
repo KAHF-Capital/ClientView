@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDropzone } from 'react-dropzone'
-import { FileText, Sparkles, Upload, Loader2, CheckCircle } from 'lucide-react'
+import { FileText, Sparkles, Upload, Loader2, CheckCircle, BarChart3 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import VariableEditor from '@/components/VariableEditor'
@@ -230,11 +230,18 @@ export default function UploadPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            ClientView
-          </h1>
-          <p className="text-xl text-gray-600">
-            Transform your proposals with AI-powered intelligence
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <Sparkles className="w-8 h-8 text-green-600" />
+            <h1 className="text-6xl font-bold text-gray-900">
+              ClientView Pro
+            </h1>
+            <Sparkles className="w-8 h-8 text-green-600" />
+          </div>
+          <p className="text-2xl text-gray-700 font-medium mb-2">
+            AI-Powered Investment Proposal Editor
+          </p>
+          <p className="text-lg text-gray-500">
+            Create professional proposals in minutes, not hours
           </p>
         </motion.div>
 
@@ -291,52 +298,88 @@ export default function UploadPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="max-w-3xl mx-auto mt-8"
+          className="max-w-4xl mx-auto mt-12"
         >
-          <div className="bg-white rounded-xl p-8 shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
-              Or Try the Demo
-            </h3>
-            <div className="flex gap-4 justify-center">
-              <Button
-                onClick={() => router.push('/template/demo')}
-                size="lg"
-                className="bg-green-600 hover:bg-green-700"
-              >
-                <FileText className="w-5 h-5 mr-2" />
-                View Template Library
-              </Button>
-              <Button
-                onClick={() => router.push('/builder/demo')}
-                size="lg"
-                variant="outline"
-                className="border-green-600 text-green-600 hover:bg-green-50"
-              >
-                <Sparkles className="w-5 h-5 mr-2" />
-                Open Builder
-              </Button>
-            </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Button
+              onClick={() => router.push('/builder/demo')}
+              size="lg"
+              className="bg-green-600 hover:bg-green-700 h-32 flex flex-col gap-2 text-white shadow-lg hover:shadow-xl transition-all"
+            >
+              <Sparkles className="w-8 h-8" />
+              <span className="font-semibold text-lg">Open Builder</span>
+              <span className="text-sm opacity-90">Try interactive editor</span>
+            </Button>
+            <Button
+              onClick={() => router.push('/charts-demo')}
+              size="lg"
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-50 h-32 flex flex-col gap-2 shadow-lg hover:shadow-xl transition-all"
+            >
+              <BarChart3 className="w-8 h-8" />
+              <span className="font-semibold text-lg">View Charts</span>
+              <span className="text-sm">See visualizations</span>
+            </Button>
+            <Button
+              onClick={() => router.push('/ai-demo')}
+              size="lg"
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-50 h-32 flex flex-col gap-2 shadow-lg hover:shadow-xl transition-all"
+            >
+              <Sparkles className="w-8 h-8" />
+              <span className="font-semibold text-lg">Try AI</span>
+              <span className="text-sm">Generate content</span>
+            </Button>
           </div>
         </motion.div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
           <FeatureCard
-            icon={<Sparkles className="w-6 h-6" />}
-            title="AI Analysis"
-            description="Automatically identifies variables and slide categories"
+            icon={<Sparkles className="w-8 h-8" />}
+            title="AI-Powered"
+            description="Generate executive summaries, market commentary, and risk disclosures instantly with Claude AI"
           />
           <FeatureCard
-            icon={<FileText className="w-6 h-6" />}
-            title="Smart Templates"
-            description="Creates reusable templates from your proposals"
+            icon={<BarChart3 className="w-8 h-8" />}
+            title="Smart Charts"
+            description="Interactive portfolio allocations, performance metrics, and risk analysis visualizations"
           />
           <FeatureCard
-            icon={<Upload className="w-6 h-6" />}
-            title="Brand Consistency"
-            description="Maintains your colors, fonts, and style"
+            icon={<FileText className="w-8 h-8" />}
+            title="Pro Templates"
+            description="Pre-built templates for quarterly reviews, new clients, and rebalancing proposals"
           />
         </div>
+        
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-20 max-w-4xl mx-auto"
+        >
+          <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-200">
+            <div className="grid md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-green-600 mb-2">5 min</div>
+                <div className="text-sm text-gray-600">Average proposal time</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-green-600 mb-2">80%</div>
+                <div className="text-sm text-gray-600">Time saved</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-green-600 mb-2">31</div>
+                <div className="text-sm text-gray-600">Calculations built-in</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-green-600 mb-2">100%</div>
+                <div className="text-sm text-gray-600">Professional quality</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   )
@@ -347,15 +390,15 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow"
+      className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
     >
-      <div className="text-green-600 mb-4">
+      <div className="text-green-600 mb-4 bg-green-50 rounded-lg p-3 inline-block">
         {icon}
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+      <h3 className="text-xl font-bold text-gray-900 mb-3">
         {title}
       </h3>
-      <p className="text-gray-600 text-sm">
+      <p className="text-gray-600 leading-relaxed">
         {description}
       </p>
     </motion.div>
