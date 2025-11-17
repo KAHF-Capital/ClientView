@@ -111,7 +111,7 @@ export const componentRegistry: ComponentDefinition[] = [
       type: 'text',
       position: { x: 100, y: 100 },
       size: { width: 600, height: 80 },
-      style: { fontSize: 48, fontWeight: 'bold' },
+      style: {},
       props: {
         content: 'Heading 1',
         fontSize: 48,
@@ -129,7 +129,7 @@ export const componentRegistry: ComponentDefinition[] = [
       type: 'text',
       position: { x: 100, y: 100 },
       size: { width: 600, height: 60 },
-      style: { fontSize: 36, fontWeight: 'bold' },
+      style: {},
       props: {
         content: 'Heading 2',
         fontSize: 36,
@@ -147,7 +147,7 @@ export const componentRegistry: ComponentDefinition[] = [
       type: 'text',
       position: { x: 100, y: 100 },
       size: { width: 600, height: 200 },
-      style: { fontSize: 16 },
+      style: {},
       props: {
         content: 'Body text content goes here. You can edit this text.',
         fontSize: 16,
@@ -164,7 +164,7 @@ export const componentRegistry: ComponentDefinition[] = [
       type: 'text',
       position: { x: 100, y: 100 },
       size: { width: 500, height: 200 },
-      style: { fontSize: 16 },
+      style: {},
       props: {
         content: '• Item 1\n• Item 2\n• Item 3',
         fontSize: 16,
