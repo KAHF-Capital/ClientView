@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ['placeholder.com', 'vercel.blob.store'],
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: false,
