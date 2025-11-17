@@ -108,9 +108,10 @@ export default function Canvas({ slideId, width = 1920, height = 1080 }: CanvasP
     // If dragging a new component from library
     if (active.data.current?.type === 'component' && over.id === `canvas-${slideId}`) {
       const rect = (over.rect as any)?.getBoundingClientRect?.()
-      if (rect) {
-        const x = event.activatorEvent.clientX - rect.left
-        const y = event.activatorEvent.clientY - rect.top
+      const activatorEvent = (event as any).activatorEvent as MouseEvent | undefined
+      if (rect && activatorEvent) {
+        const x = activatorEvent.clientX - rect.left
+        const y = activatorEvent.clientY - rect.top
         setDragOffset({ x, y })
       }
     }
@@ -129,10 +130,11 @@ export default function Canvas({ slideId, width = 1920, height = 1080 }: CanvasP
     if (active.data.current?.type === 'component' && over.id === `canvas-${slideId}`) {
       const definition = active.data.current.definition as ComponentDefinition
       const canvasRect = (over.rect as any)?.getBoundingClientRect?.()
+      const activatorEvent = (event as any).activatorEvent as MouseEvent | undefined
 
-      if (canvasRect) {
-        const x = event.activatorEvent.clientX - canvasRect.left
-        const y = event.activatorEvent.clientY - canvasRect.top
+      if (canvasRect && activatorEvent) {
+        const x = activatorEvent.clientX - canvasRect.left
+        const y = activatorEvent.clientY - canvasRect.top
 
         // Snap to grid if enabled
         const snappedX = snapToGrid ? Math.round(x / gridSize) * gridSize : x
@@ -151,10 +153,11 @@ export default function Canvas({ slideId, width = 1920, height = 1080 }: CanvasP
     if (active.id.toString().startsWith('component-')) {
       const componentId = active.id.toString().replace('component-', '')
       const canvasRect = (over.rect as any)?.getBoundingClientRect?.()
+      const activatorEvent = (event as any).activatorEvent as MouseEvent | undefined
 
-      if (canvasRect && over.id === `canvas-${slideId}`) {
-        const x = event.activatorEvent.clientX - canvasRect.left
-        const y = event.activatorEvent.clientY - canvasRect.top
+      if (canvasRect && over.id === `canvas-${slideId}` && activatorEvent) {
+        const x = activatorEvent.clientX - canvasRect.left
+        const y = activatorEvent.clientY - canvasRect.top
 
         const snappedX = snapToGrid ? Math.round(x / gridSize) * gridSize : x
         const snappedY = snapToGrid ? Math.round(y / gridSize) * gridSize : y
