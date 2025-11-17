@@ -4,7 +4,7 @@
  */
 
 import { create } from 'zustand'
-import type { Slide, CanvasComponent, HistoryState } from '@/lib/types/canvas'
+import type { Slide, CanvasComponent, HistoryState, CanvasState } from '@/lib/types/canvas'
 import { nanoid } from 'nanoid'
 
 interface CanvasStore extends CanvasState {
