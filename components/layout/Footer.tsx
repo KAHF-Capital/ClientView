@@ -54,22 +54,12 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="hover:text-green-400 transition-colors">
-                  Home
+                  Templates
                 </Link>
               </li>
               <li>
                 <Link href="/canvas" className="hover:text-green-400 transition-colors">
                   Canvas Editor
-                </Link>
-              </li>
-              <li>
-                <Link href="/builder/demo" className="hover:text-green-400 transition-colors">
-                  Legacy Builder
-                </Link>
-              </li>
-              <li>
-                <Link href="/charts-demo" className="hover:text-green-400 transition-colors">
-                  Charts Demo
                 </Link>
               </li>
             </ul>

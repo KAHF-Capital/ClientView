@@ -5,7 +5,8 @@
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { DndContext } from '@dnd-kit/core'
 import { useCanvasStore } from '@/lib/stores/canvas-store'
 import ComponentLibrary from '@/components/canvas/ComponentLibrary'
@@ -15,47 +16,98 @@ import CanvasToolbar from '@/components/canvas/CanvasToolbar'
 import SlideThumbnails from '@/components/canvas/SlideThumbnails'
 import type { Slide } from '@/lib/types/canvas'
 
-export default function CanvasEditorPage() {
+function CanvasEditorContent() {
   const { slides, activeSlideId, initialize, addSlide } = useCanvasStore()
+  const searchParams = useSearchParams()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Try to load from localStorage first (only in browser)
-    if (typeof window === 'undefined') return
-    const savedData = localStorage.getItem('canvas-data')
-    if (savedData) {
-      try {
-        const parsedSlides = JSON.parse(savedData)
-        if (Array.isArray(parsedSlides) && parsedSlides.length > 0) {
-          initialize(parsedSlides)
-          return
+    async function loadCanvas() {
+      if (typeof window === 'undefined') return
+
+      // Check if loading a template from URL
+      const templateId = searchParams.get('template')
+      if (templateId) {
+        try {
+          const response = await fetch(`/api/templates/canvas?id=${templateId}`)
+          if (response.ok) {
+            const template = await response.json()
+            if (template.slides && Array.isArray(template.slides) && template.slides.length > 0) {
+              initialize(template.slides)
+              setLoading(false)
+              return
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to load template:', error)
         }
-      } catch (error) {
-        console.warn('Failed to load saved canvas data:', error)
       }
+
+      // Try to load from localStorage
+      const savedData = localStorage.getItem('canvas-data')
+      if (savedData) {
+        try {
+          const parsedSlides = JSON.parse(savedData)
+          if (Array.isArray(parsedSlides) && parsedSlides.length > 0) {
+            initialize(parsedSlides)
+            setLoading(false)
+            return
+          }
+        } catch (error) {
+          console.warn('Failed to load saved canvas data:', error)
+        }
+      }
+
+      // Initialize with a blank slide if no slides exist
+      if (slides.length === 0) {
+        const initialSlide: Slide = {
+          id: 'slide-1',
+          index: 0,
+          title: 'Slide 1',
+          components: [],
+          backgroundColor: '#ffffff',
+        }
+        initialize([initialSlide])
+      }
+      setLoading(false)
     }
 
-    // Initialize with a blank slide if no slides exist
-    if (slides.length === 0) {
-      const initialSlide: Slide = {
-        id: 'slide-1',
-        index: 0,
-        title: 'Slide 1',
-        components: [],
-        backgroundColor: '#ffffff',
-      }
-      initialize([initialSlide])
-    }
-  }, [])
+    loadCanvas()
+  }, [searchParams])
 
-  const handleSave = () => {
-    // Save to localStorage for now (only in browser)
+  const handleSave = async () => {
+    // Save to localStorage (only in browser)
     if (typeof window === 'undefined') return
     const data = JSON.stringify(slides)
     localStorage.setItem('canvas-data', data)
     // Also save history
     const { history } = useCanvasStore.getState()
     localStorage.setItem('canvas-history', JSON.stringify(history))
-    alert('Saved successfully!')
+    
+    // Save as template
+    const templateName = prompt('Enter template name:') || `Template ${new Date().toLocaleDateString()}`
+    if (templateName) {
+      try {
+        const response = await fetch('/api/templates/canvas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: templateName,
+            slides,
+          }),
+        })
+        
+        if (response.ok) {
+          const { id } = await response.json()
+          alert(`Template "${templateName}" saved successfully!`)
+        } else {
+          throw new Error('Failed to save template')
+        }
+      } catch (error) {
+        console.error('Save template error:', error)
+        alert('Saved locally, but failed to save as template.')
+      }
+    }
   }
 
   const handleExport = async () => {
@@ -127,6 +179,17 @@ export default function CanvasEditorPage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  if (loading) {
+    return (
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading editor...</p>
+        </div>
+      </div>
+    )
+  }
+
   if (!activeSlideId) {
     return (
       <div className="h-[calc(100vh-8rem)] flex items-center justify-center">
@@ -170,3 +233,17 @@ export default function CanvasEditorPage() {
   )
 }
 
+export default function CanvasEditorPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading editor...</p>
+        </div>
+      </div>
+    }>
+      <CanvasEditorContent />
+    </Suspense>
+  )
+}

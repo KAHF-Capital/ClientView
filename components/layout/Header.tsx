@@ -42,7 +42,7 @@ export default function Header() {
               onClick={() => router.push('/')}
               className={isActive('/') ? 'bg-green-600 hover:bg-green-700' : ''}
             >
-              Home
+              Templates
             </Button>
             <Button
               variant={isActive('/canvas') ? 'default' : 'ghost'}
@@ -50,22 +50,7 @@ export default function Header() {
               onClick={() => router.push('/canvas')}
               className={isActive('/canvas') ? 'bg-green-600 hover:bg-green-700' : ''}
             >
-              Canvas Editor
-            </Button>
-            <Button
-              variant={isActive('/builder') ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => router.push('/builder/demo')}
-              className={isActive('/builder') ? 'bg-green-600 hover:bg-green-700' : ''}
-            >
-              Legacy Builder
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push('/charts-demo')}
-            >
-              Charts
+              Editor
             </Button>
           </nav>
 
@@ -107,7 +92,7 @@ export default function Header() {
                 }}
                 className={isActive('/') ? 'bg-green-600 hover:bg-green-700 justify-start' : 'justify-start'}
               >
-                Home
+                Templates
               </Button>
               <Button
                 variant={isActive('/canvas') ? 'default' : 'ghost'}
@@ -118,29 +103,7 @@ export default function Header() {
                 }}
                 className={isActive('/canvas') ? 'bg-green-600 hover:bg-green-700 justify-start' : 'justify-start'}
               >
-                Canvas Editor
-              </Button>
-              <Button
-                variant={isActive('/builder') ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => {
-                  router.push('/builder/demo')
-                  setMobileMenuOpen(false)
-                }}
-                className={isActive('/builder') ? 'bg-green-600 hover:bg-green-700 justify-start' : 'justify-start'}
-              >
-                Legacy Builder
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  router.push('/charts-demo')
-                  setMobileMenuOpen(false)
-                }}
-                className="justify-start"
-              >
-                Charts
+                Editor
               </Button>
               <div className="pt-2 border-t border-gray-200 mt-2">
                 <Button
@@ -151,7 +114,7 @@ export default function Header() {
                   }}
                   className="bg-green-600 hover:bg-green-700 text-white w-full"
                 >
-                  Get Started
+                  Create New
                 </Button>
               </div>
             </nav>
