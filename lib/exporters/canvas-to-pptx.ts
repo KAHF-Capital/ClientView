@@ -38,7 +38,7 @@ export async function exportCanvasToPPTX(slides: Slide[], fileName: string = 'pr
     const scaleY = pptxHeight / canvasHeight
 
     for (const component of sortedComponents) {
-      if (component.style?.visible === false) continue
+      if (component.visible === false) continue
 
       const x = (component.position.x * scaleX).toFixed(2)
       const y = (component.position.y * scaleY).toFixed(2)
