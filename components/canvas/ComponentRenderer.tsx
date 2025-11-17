@@ -172,7 +172,7 @@ function renderChart(props: any) {
 }
 
 function renderMetric(props: any, style: any) {
-  if (props.layout === 'grid' && props.metrics) {
+  if (props.layout === 'grid' && props.metrics && Array.isArray(props.metrics)) {
     return (
       <div
         style={{
@@ -213,7 +213,7 @@ function renderMetric(props: any, style: any) {
     >
       <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 8 }}>{props.label || 'Metric'}</div>
       <div style={{ fontSize: 32, fontWeight: 'bold', color: '#10b981' }}>{props.value || '$0'}</div>
-      {props.trend && (
+      {props.trend && typeof props.trend === 'string' && (
         <div style={{ fontSize: 12, color: props.trend.startsWith('+') ? '#10b981' : '#ef4444', marginTop: 4 }}>
           {props.trend}
         </div>

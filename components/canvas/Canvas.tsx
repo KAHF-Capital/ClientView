@@ -150,8 +150,9 @@ export default function Canvas({ slideId, width = 1920, height = 1080 }: CanvasP
     }
 
     // If moving an existing component
-    if (active.id.toString().startsWith('component-')) {
-      const componentId = active.id.toString().replace('component-', '')
+    const activeIdStr = String(active.id)
+    if (activeIdStr.startsWith('component-')) {
+      const componentId = activeIdStr.replace('component-', '')
       const canvasRect = (over.rect as any)?.getBoundingClientRect?.()
       const activatorEvent = (event as any).activatorEvent as MouseEvent | undefined
 

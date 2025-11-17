@@ -32,6 +32,7 @@ export interface Style {
   padding?: number
   opacity?: number
   zIndex?: number
+  color?: string
 }
 
 export interface CanvasComponent {

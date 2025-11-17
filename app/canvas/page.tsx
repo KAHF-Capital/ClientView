@@ -19,7 +19,8 @@ export default function CanvasEditorPage() {
   const { slides, activeSlideId, initialize, addSlide } = useCanvasStore()
 
   useEffect(() => {
-    // Try to load from localStorage first
+    // Try to load from localStorage first (only in browser)
+    if (typeof window === 'undefined') return
     const savedData = localStorage.getItem('canvas-data')
     if (savedData) {
       try {
@@ -47,7 +48,8 @@ export default function CanvasEditorPage() {
   }, [])
 
   const handleSave = () => {
-    // Save to localStorage for now
+    // Save to localStorage for now (only in browser)
+    if (typeof window === 'undefined') return
     const data = JSON.stringify(slides)
     localStorage.setItem('canvas-data', data)
     // Also save history

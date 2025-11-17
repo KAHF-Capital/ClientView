@@ -169,7 +169,7 @@ async function addChartToSlide(slide: any, component: CanvasComponent, options: 
   }))
 
   try {
-    const PptxGenJS = (await import('pptxgenjs')).default
+    // Use the already imported PptxGenJS
     switch (chartType) {
       case 'pie':
       case 'donut':
