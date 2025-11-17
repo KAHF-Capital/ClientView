@@ -44,3 +44,5 @@ export default function BarComparison({ data, height = 300, colors }: BarCompari
   )
 }
 
+
+

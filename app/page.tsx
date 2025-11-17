@@ -238,10 +238,10 @@ export default function UploadPage() {
             <Sparkles className="w-8 h-8 text-green-600" />
           </div>
           <p className="text-2xl text-gray-700 font-medium mb-2">
-            AI-Powered Investment Proposal Editor
+            Professional Investment Proposal Tools
           </p>
           <p className="text-lg text-gray-500">
-            Create professional proposals in minutes, not hours
+            Create stunning proposals in minutes, not hours
           </p>
         </motion.div>
 
@@ -302,13 +302,23 @@ export default function UploadPage() {
         >
           <div className="grid md:grid-cols-3 gap-4">
             <Button
-              onClick={() => router.push('/builder/demo')}
+              onClick={() => router.push('/canvas')}
               size="lg"
               className="bg-green-600 hover:bg-green-700 h-32 flex flex-col gap-2 text-white shadow-lg hover:shadow-xl transition-all"
             >
               <Sparkles className="w-8 h-8" />
-              <span className="font-semibold text-lg">Open Builder</span>
-              <span className="text-sm opacity-90">Try interactive editor</span>
+              <span className="font-semibold text-lg">Canvas Editor</span>
+              <span className="text-sm opacity-90">Drag & drop design tool</span>
+            </Button>
+            <Button
+              onClick={() => router.push('/builder/demo')}
+              size="lg"
+              variant="outline"
+              className="border-green-600 text-green-700 hover:bg-green-50 h-32 flex flex-col gap-2 shadow-lg hover:shadow-xl transition-all"
+            >
+              <Sparkles className="w-8 h-8" />
+              <span className="font-semibold text-lg">Legacy Builder</span>
+              <span className="text-sm">Original editor</span>
             </Button>
             <Button
               onClick={() => router.push('/charts-demo')}

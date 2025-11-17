@@ -153,3 +153,5 @@ export function calculateInformationRatio(
   return excessReturn / trackingError
 }
 
+
+

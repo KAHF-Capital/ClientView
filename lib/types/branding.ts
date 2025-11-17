@@ -25,3 +25,5 @@ export const DEFAULT_BRANDING: BrandingConfig = {
   footer: 'Confidential • ClientView Pro',
 }
 
+
+
